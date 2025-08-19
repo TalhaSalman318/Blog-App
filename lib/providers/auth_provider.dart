@@ -1,69 +1,108 @@
 import 'package:flutter/material.dart';
 import 'package:blog_app/services/auth_service.dart';
-import 'package:blog_app/storage/session_storage.dart';
-import 'package:blog_app/models/user.dart';
 
 class AuthProvider with ChangeNotifier {
-  final AuthService _authService = AuthService();
-  final SessionStorage _session = SessionStorage();
+  final AuthService _authService;
 
-  UserModel? _user;
-  String? _token;
+  AuthProvider({required AuthService authService}) : _authService = authService;
+
+  // State variables
   bool _isLoading = false;
   String? _error;
+  Map<String, dynamic>? _currentUser;
 
-  UserModel? get user => _user;
-  String? get token => _token;
+  // Getters
   bool get isLoading => _isLoading;
   String? get error => _error;
-  bool get isLoggedIn => _token != null;
+  Map<String, dynamic>? get currentUser => _currentUser;
 
-  /// Initialize: load session if available
-  Future<void> initialize() async {
-    _token = await _session.getToken();
-    if (_token != null) {
-      await fetchProfile();
-    }
-  }
-
-  /// Login
-  Future<void> login(String username, String password) async {
+  // Login method
+  Future<bool> login(String username, String password) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final data = await _authService.loginApi(username, password);
-      _token = data['token'];
-      await _session.saveToken(_token!);
-      await fetchProfile();
+      final response = await _authService.login(
+        username: username,
+        password: password,
+      );
+
+      // Fetch user profile after successful login
+      if (response.containsKey('token')) {
+        final userProfile = await _authService.getCurrentUser();
+        _currentUser = userProfile;
+      }
+
+      return true;
     } catch (e) {
       _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 
-  /// Fetch user profile
-  Future<void> fetchProfile() async {
-    if (_token == null) return;
+  // Auto-login using existing token
+  Future<bool> tryAutoLogin() async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
-      final data = await _authService.getProfile(_token!);
-
-      // ✅ fix: API ka response map hota hai, string nahi
-      _user = UserModel.fromMap(data);
+      if (await _authService.isLoggedIn()) {
+        _currentUser = await _authService.getCurrentUser();
+        return true;
+      }
+      return false;
     } catch (e) {
-      _error = e.toString();
+      await _authService.logout();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
+  }
+
+  // Logout method
+  Future<void> logout() async {
+    await _authService.logout();
+    _currentUser = null;
     notifyListeners();
   }
 
-  /// Logout
-  Future<void> logout() async {
-    _token = null;
-    _user = null;
-    await _session.clear();
+  // Registration method
+  Future<bool> register({
+    required String username,
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+  }) async {
+    _isLoading = true;
+    _error = null;
     notifyListeners();
+
+    try {
+      final response = await _authService.register(
+        username: username,
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+      );
+
+      // Auto-login after registration if needed
+      if (response.containsKey('id')) {
+        return await login(username, password);
+      }
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }
