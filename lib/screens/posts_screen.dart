@@ -1,47 +1,53 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../providers/posts_provider.dart';
-// import '../widgets/post_tile.dart';
+import 'package:blog_app/models/post.dart';
+import 'package:blog_app/services/posts_service.dart';
+import 'package:blog_app/widgets/post_tile.dart';
+import 'package:flutter/material.dart';
 
-// class PostsScreen extends StatefulWidget {
-//   @override
-//   _PostsScreenState createState() => _PostsScreenState();
-// }
+class PostsScreen extends StatefulWidget {
+  const PostsScreen({super.key});
 
-// class _PostsScreenState extends State<PostsScreen> {
-//   final _scrollController = ScrollController();
+  @override
+  State<PostsScreen> createState() => _PostsScreenState();
+}
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     final postsProvider = Provider.of<PostsProvider>(context, listen: false);
-//     postsProvider.loadPosts();
-//     _scrollController.addListener(_onScroll);
-//   }
+class _PostsScreenState extends State<PostsScreen> {
+  final PostsService _postsService = PostsService();
+  PostModel? _postModel;
+  bool _loading = true;
 
-//   void _onScroll() {
-//     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-//       Provider.of<PostsProvider>(context, listen: false).loadPosts();
-//     }
-//   }
+  @override
+  void initState() {
+    super.initState();
+    fetchPosts();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final postsProvider = Provider.of<PostsProvider>(context);
+  Future<void> fetchPosts() async {
+    final result = await _postsService.getPosts(limit: 10);
+    setState(() {
+      _postModel = result as PostModel?;
+      _loading = false;
+    });
+  }
 
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Posts')),
-//       body: ListView.builder(
-//         controller: _scrollController,
-//         itemCount: postsProvider.posts.length + (postsProvider.hasMore ? 1 : 0),
-//         itemBuilder: (context, index) {
-//           if (index < postsProvider.posts.length) {
-//             return PostTile(post: postsProvider.posts[index]);
-//           } else {
-//             return Center(child: CircularProgressIndicator());
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) return const Center(child: CircularProgressIndicator());
+
+    if (_postModel == null || _postModel!.posts == null) {
+      return const Center(child: Text("No posts found"));
+    }
+
+    final posts = _postModel!.posts!; // List<PostsItem>
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Posts")),
+      body: ListView.builder(
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          final post = posts[index]; // <-- yahan ek PostsItem hai
+          return PostTile(post: post); // PostTile ko bhejna
+        },
+      ),
+    );
+  }
+}

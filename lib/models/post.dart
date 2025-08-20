@@ -42,6 +42,7 @@ class PostModel extends Equatable {
     int? total,
     int? skip,
     int? limit,
+    required int id,
   }) {
     return PostModel(
       posts: posts ?? this.posts,
