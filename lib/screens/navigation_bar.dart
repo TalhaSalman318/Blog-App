@@ -17,46 +17,54 @@ class _TabBar1State extends State<NavigationBar1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.greyColor4,
-
         currentIndex: cindex,
         onTap: (index) {
           setState(() {
-            cindex = index; // Update the index when a tab is tapped
+            cindex = index;
           });
         },
         items: [
           BottomNavigationBarItem(
-            icon: Image.asset('assets/navigation/home.jpg'),
+            icon: Image.asset(
+              "assets/navigation/home.jpg",
+              width: 24,
+              height: 24,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/navigation/quotes.png'),
+            icon: Image.asset(
+              "assets/navigation/quotes.png",
+              width: 24,
+              height: 24,
+              color: cindex == 1 ? Colors.white : Colors.grey,
+            ),
             label: 'Quotries',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset('assets/navigation/profile.jpg'),
+            icon: Image.asset(
+              "assets/navigation/profile.jpg",
+              width: 24,
+              height: 24,
+              color: cindex == 2 ? Colors.white : Colors.grey,
+            ),
             label: 'Profile',
           ),
         ],
-      ),
+        selectedLabelStyle: TextStyle(color: Colors.white),
+        unselectedLabelStyle: TextStyle(color: Colors.white),
 
-      // Body with conditional rendering
-      body: Column(
-        children: [
-          Expanded(
-            child: cindex == 0
-                ? const PostsScreen()
-                : cindex == 1
-                ? const QuotesScreen()
-                : cindex == 2
-                ? const ProfileScreen()
-                : Container(), // Fallback, should never happen
-          ),
-        ],
+        // 👇 Yeh ignore ho jaayenge kyunki upar style set hai
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
       ),
+      body: cindex == 0
+          ? const PostsScreen()
+          : cindex == 1
+          ? const QuotesScreen()
+          : const ProfileScreen(),
     );
   }
 }

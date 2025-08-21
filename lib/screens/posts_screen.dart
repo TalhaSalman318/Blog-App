@@ -1,4 +1,5 @@
 import 'package:blog_app/models/post.dart';
+import 'package:blog_app/screens/post_detail_screen.dart';
 import 'package:blog_app/services/posts_service.dart';
 import 'package:blog_app/widgets/colors.dart';
 import 'package:blog_app/widgets/post_tile.dart';
@@ -57,7 +58,17 @@ class _PostsScreenState extends State<PostsScreen> {
         itemCount: posts.length,
         itemBuilder: (context, index) {
           final post = posts[index]; // <-- yahan ek PostsItem hai
-          return PostTile(post: post); // PostTile ko bhejna
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostDetailScreen(post: post),
+                ),
+              );
+            },
+            child: PostTile(post: post),
+          ); // PostTile ko bhejna
         },
       ),
     );

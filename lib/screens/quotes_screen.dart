@@ -46,7 +46,10 @@ class _QuotesScreenState extends State<QuotesScreen> {
     return Scaffold(
       backgroundColor: AppColors.blackColor,
 
-      appBar: AppBar(title: const Text("Quotes")),
+      appBar: AppBar(
+        title: const Text("Quotes"),
+        backgroundColor: AppColors.blackColor,
+      ),
       body: ListView.builder(
         itemCount: quotes.length,
         itemBuilder: (context, index) {
