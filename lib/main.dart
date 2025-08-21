@@ -1,4 +1,5 @@
 import 'package:blog_app/providers/posts_provider.dart';
+import 'package:blog_app/screens/navigation_bar.dart';
 import 'package:blog_app/screens/posts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Blog App',
         debugShowCheckedModeBanner: false,
-        home: PostsScreen(),
+        home: NavigationBar1(),
       ),
     );
   }

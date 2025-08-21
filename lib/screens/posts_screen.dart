@@ -1,5 +1,6 @@
 import 'package:blog_app/models/post.dart';
 import 'package:blog_app/services/posts_service.dart';
+import 'package:blog_app/widgets/colors.dart';
 import 'package:blog_app/widgets/post_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,18 @@ class _PostsScreenState extends State<PostsScreen> {
     final posts = _postModel!.posts!; // List<PostsItem>
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Posts")),
+      backgroundColor: AppColors.blackColor,
+      appBar: AppBar(
+        title: const Text(
+          "Dailt Stories",
+          style: TextStyle(
+            fontSize: 20,
+            color: AppColors.whiteColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: AppColors.blackColor,
+      ),
       body: ListView.builder(
         itemCount: posts.length,
         itemBuilder: (context, index) {
