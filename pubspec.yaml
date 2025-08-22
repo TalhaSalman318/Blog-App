@@ -70,6 +70,9 @@ flutter:
     - assets/posts/dislike.png
     - assets/posts/like.png
     - assets/posts/view.png
+    # quotes
+    - assets/quotes/like_button.png
+    - assets/quotes/share_button.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -33,12 +33,22 @@ class QuoteCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                " ~ ${quote.author ?? "Unknown"}",
-                style: TextStyle(color: AppColors.greyColor3, fontSize: 14),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  " ~ ${quote.author ?? "Unknown"}",
+                  style: TextStyle(color: AppColors.greyColor3, fontSize: 14),
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset('assets/quotes/like_button.png'),
+                    Image.asset('assets/quotes/share_button.png'),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
