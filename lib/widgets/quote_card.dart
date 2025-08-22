@@ -10,7 +10,14 @@ class QuoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: AppColors.q1grey,
+      color: AppColors.q2grey,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: AppColors.q1grey, // 🔹 border color
+          width: 2,
+        ), // 🔹 border color & width
+        borderRadius: BorderRadius.circular(15),
+      ),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: Padding(
         padding: const EdgeInsets.all(16.0),

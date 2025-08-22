@@ -44,11 +44,18 @@ class _QuotesScreenState extends State<QuotesScreen> {
     final quotes = _quoteModel!.quotes!; // List<PostsItem>
 
     return Scaffold(
-      backgroundColor: AppColors.blackColor,
+      backgroundColor: AppColors.q2grey,
 
       appBar: AppBar(
-        title: const Text("Quotes"),
-        backgroundColor: AppColors.blackColor,
+        title: const Text(
+          "Quotes",
+          style: TextStyle(
+            color: AppColors.whiteColor,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: AppColors.q2grey,
       ),
       body: ListView.builder(
         itemCount: quotes.length,
