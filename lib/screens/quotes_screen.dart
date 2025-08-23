@@ -1,9 +1,7 @@
-import 'package:blog_app/models/post.dart';
 import 'package:blog_app/models/quote.dart';
-import 'package:blog_app/services/posts_service.dart';
+import 'package:blog_app/screens/favourite_quote_screen.dart';
 import 'package:blog_app/services/quotes_service.dart';
 import 'package:blog_app/widgets/colors.dart';
-import 'package:blog_app/widgets/post_tile.dart';
 import 'package:blog_app/widgets/quote_card.dart';
 import 'package:flutter/material.dart';
 
@@ -55,6 +53,31 @@ class _QuotesScreenState extends State<QuotesScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: Image.asset('assets/quotes/search_button.png'),
+                onPressed: () {
+                  // Search functionality can be implemented here
+                },
+              ),
+
+              IconButton(
+                icon: Image.asset('assets/quotes/like_button.png'),
+                onPressed: () {
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const FavouriteQuoteScreen(),
+                  //   ),
+                  // );
+                },
+              ),
+            ],
+          ),
+        ],
         backgroundColor: AppColors.q2grey,
       ),
       body: ListView.builder(

@@ -8,8 +8,7 @@ class QuotesProvider extends ChangeNotifier {
   final QuotesService _postsService = QuotesService();
 
   final List<QuotesItem> _quotes = [];
-
-  List<QuotesItem> get posts => List.unmodifiable(_quotes);
+  List<int> _selectedItems = [];
 
   bool _isLoading = false;
   String? _error;

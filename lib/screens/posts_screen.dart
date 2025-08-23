@@ -1,9 +1,11 @@
 import 'package:blog_app/models/post.dart';
 import 'package:blog_app/screens/post_detail_screen.dart';
+import 'package:blog_app/screens/search_post.dart';
 import 'package:blog_app/services/posts_service.dart';
 import 'package:blog_app/widgets/colors.dart';
 import 'package:blog_app/widgets/post_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({super.key});
@@ -52,6 +54,30 @@ class _PostsScreenState extends State<PostsScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                icon: Image.asset('assets/posts/order.png'),
+                onPressed: () {
+                  // Search functionality can be implemented here
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.search, color: AppColors.whiteColor),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchPost(posts: posts),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
         backgroundColor: AppColors.blackColor,
       ),
       body: ListView.builder(

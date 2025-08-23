@@ -9,6 +9,8 @@ class QuoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Card(
       color: AppColors.q2grey,
       shape: RoundedRectangleBorder(
@@ -28,24 +30,33 @@ class QuoteCard extends StatelessWidget {
               quote.quote ?? "",
               style: TextStyle(
                 color: AppColors.whiteColor,
-                fontSize: 16,
+                fontSize: width * 0.045,
                 fontStyle: FontStyle.italic,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   " ~ ${quote.author ?? "Unknown"}",
-                  style: TextStyle(color: AppColors.greyColor3, fontSize: 14),
+                  style: TextStyle(
+                    color: AppColors.greyColor3,
+                    fontSize: width * 0.035,
+                  ),
                 ),
 
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset('assets/quotes/like_button.png'),
-                    Image.asset('assets/quotes/share_button.png'),
+                    Image.asset(
+                      'assets/quotes/like_button.png',
+                      width: width * 0.07,
+                    ),
+                    const SizedBox(width: 10),
+                    Image.asset(
+                      'assets/quotes/share_button.png',
+                      width: width * 0.07,
+                    ),
                   ],
                 ),
               ],
