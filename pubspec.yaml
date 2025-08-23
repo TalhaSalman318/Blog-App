@@ -67,7 +67,7 @@ flutter:
     - assets/navigation/quotes.png
     - assets/navigation/profile.jpg
     # posts
-    - assets/posts/dislike.png
+    - assets/posts/dislike_icon.png
     - assets/posts/like.png
     - assets/posts/view.png
     - assets/posts/order.png
@@ -75,6 +75,12 @@ flutter:
     - assets/quotes/like_button.png
     - assets/quotes/share_button.png
     - assets/quotes/search_button.png
+    #search
+    - assets/search/crime.png
+    - assets/search/french_image.png
+    - assets/search/history_image.png
+    - assets/search/magical.png
+    - assets/search/myestry.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

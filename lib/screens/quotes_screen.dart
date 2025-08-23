@@ -1,5 +1,4 @@
 import 'package:blog_app/models/quote.dart';
-import 'package:blog_app/screens/favourite_quote_screen.dart';
 import 'package:blog_app/services/quotes_service.dart';
 import 'package:blog_app/widgets/colors.dart';
 import 'package:blog_app/widgets/quote_card.dart';

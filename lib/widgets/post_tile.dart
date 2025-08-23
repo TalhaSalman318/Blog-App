@@ -108,7 +108,7 @@ class PostTile extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        'assets/posts/dislike.png', // 🔹 like icon
+                        'assets/posts/dislike_icon.png', // 🔹 like icon
                       ),
                       const SizedBox(width: 5),
                       Text(
