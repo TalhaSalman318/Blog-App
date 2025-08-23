@@ -1,11 +1,10 @@
-import 'package:blog_app/models/post.dart';
+import 'package:blog_app/providers/posts_provider.dart';
 import 'package:blog_app/screens/post_detail_screen.dart';
 import 'package:blog_app/screens/search_post.dart';
-import 'package:blog_app/services/posts_service.dart';
 import 'package:blog_app/widgets/colors.dart';
 import 'package:blog_app/widgets/post_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 class PostsScreen extends StatefulWidget {
   const PostsScreen({super.key});
@@ -15,57 +14,64 @@ class PostsScreen extends StatefulWidget {
 }
 
 class _PostsScreenState extends State<PostsScreen> {
-  final PostsService _postsService = PostsService();
-  PostModel? _postModel;
-  bool _loading = true;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    fetchPosts();
-  }
 
-  Future<void> fetchPosts() async {
-    final result = await _postsService.getPosts(limit: 10);
-    setState(() {
-      _postModel = result as PostModel?;
-      _loading = false;
+    // Initial Load
+    Future.microtask(
+      () => Provider.of<PostsProvider>(context, listen: false).fetchPosts(),
+    );
+
+    // Scroll listener
+    _scrollController.addListener(() {
+      final provider = Provider.of<PostsProvider>(context, listen: false);
+
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !provider.isLoading &&
+          provider.hasMore) {
+        provider.fetchPosts();
+      }
     });
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    return Consumer<PostsProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading && provider.posts.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    if (_postModel == null || _postModel!.posts == null) {
-      return const Center(child: Text("No posts found"));
-    }
+        if (provider.error != null && provider.posts.isEmpty) {
+          return Center(child: Text("Error: ${provider.error}"));
+        }
 
-    final posts = _postModel!.posts!; // List<PostsItem>
+        final posts = provider.posts;
 
-    return Scaffold(
-      backgroundColor: AppColors.blackColor,
-      appBar: AppBar(
-        title: const Text(
-          "Dailt Stories",
-          style: TextStyle(
-            fontSize: 20,
-            color: AppColors.whiteColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                icon: Image.asset('assets/posts/order.png'),
-                onPressed: () {
-                  // Search functionality can be implemented here
-                },
+        return Scaffold(
+          backgroundColor: AppColors.blackColor,
+          appBar: AppBar(
+            title: const Text(
+              "Daily Stories",
+              style: TextStyle(
+                fontSize: 20,
+                color: AppColors.whiteColor,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            actions: [
               IconButton(
-                icon: Icon(Icons.search, color: AppColors.whiteColor),
+                icon: const Icon(Icons.search, color: AppColors.whiteColor),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -76,27 +82,36 @@ class _PostsScreenState extends State<PostsScreen> {
                 },
               ),
             ],
+            backgroundColor: AppColors.blackColor,
           ),
-        ],
-        backgroundColor: AppColors.blackColor,
-      ),
-      body: ListView.builder(
-        itemCount: posts.length,
-        itemBuilder: (context, index) {
-          final post = posts[index]; // <-- yahan ek PostsItem hai
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PostDetailScreen(post: post),
-                ),
-              );
+          body: ListView.builder(
+            controller: _scrollController,
+            itemCount: posts.length + (provider.hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index < posts.length) {
+                final post = posts[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PostDetailScreen(post: post),
+                      ),
+                    );
+                  },
+                  child: PostTile(post: post),
+                );
+              } else {
+                // Loader at bottom jab aur data load ho raha ho
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
             },
-            child: PostTile(post: post),
-          ); // PostTile ko bhejna
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

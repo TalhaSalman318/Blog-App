@@ -24,6 +24,33 @@ class PostsProvider extends ChangeNotifier {
   Future<void> fetchPosts({bool refresh = false}) async {
     if (_isLoading) return;
     _setLoading(true);
+
+    try {
+      if (refresh) {
+        _skip = 0;
+        _posts.clear();
+      }
+
+      final response = await _postsService.getPosts(limit: _limit, skip: _skip);
+
+      // agar API total bhejti hai to use, warna calculate karlo
+      _total =
+          response.total ?? (_posts.length + (response.posts?.length ?? 0));
+
+      if (response.posts != null && response.posts!.isNotEmpty) {
+        _posts.addAll(response.posts!);
+        _skip += _limit; // next page ke liye offset barhao
+      } else {
+        // koi nayi post nahi mili → total fix kar do
+        _total = _posts.length;
+      }
+
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _setLoading(false);
+    }
   }
 
   // 🔹 Add new post (optimistic)

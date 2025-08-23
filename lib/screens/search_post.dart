@@ -13,7 +13,6 @@ class SearchPost extends StatefulWidget {
     Colors.blue,
     Colors.orange,
     Colors.purple,
-    Colors.teal,
   ];
 
   final List<String> myImages = [
@@ -79,18 +78,21 @@ class _SearchPostState extends State<SearchPost> {
                         borderRadius: BorderRadius.circular(10.0),
                         color: AppColors.greyColor2,
                       ),
-                      height: 120,
+                      height: 125,
                       child: Row(
                         children: [
-                          Container(
-                            height: 70,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              color: random_color,
-                              borderRadius: BorderRadius.circular(10.0),
-                              image: DecorationImage(
-                                image: AssetImage(random_image),
-                                fit: BoxFit.cover,
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              height: 70,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                color: random_color,
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: DecorationImage(
+                                  image: AssetImage(random_image),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
@@ -98,6 +100,7 @@ class _SearchPostState extends State<SearchPost> {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   post.title ?? " ",
@@ -107,7 +110,7 @@ class _SearchPostState extends State<SearchPost> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 5),
+                                SizedBox(height: 15),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,

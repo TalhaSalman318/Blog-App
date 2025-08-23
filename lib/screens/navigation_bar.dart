@@ -28,9 +28,10 @@ class _TabBar1State extends State<NavigationBar1> {
         items: [
           BottomNavigationBarItem(
             icon: Image.asset(
-              "assets/navigation/home.jpg",
-              width: 24,
+              "assets/navigation/home.png",
+              width: 34,
               height: 24,
+              fit: BoxFit.cover,
             ),
             label: 'Home',
           ),
@@ -45,7 +46,7 @@ class _TabBar1State extends State<NavigationBar1> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              "assets/navigation/profile.jpg",
+              "assets/navigation/profile.png",
               width: 24,
               height: 24,
               color: cindex == 2 ? Colors.white : Colors.grey,

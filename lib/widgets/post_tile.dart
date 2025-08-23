@@ -93,7 +93,8 @@ class PostTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Image.asset(
-                        'assets/posts/like.png', // 🔹 like icon
+                        'assets/posts/like.png',
+                        height: width * 0.04, // 🔹 like icon
                       ),
                       const SizedBox(width: 5),
                       Text(
@@ -108,7 +109,8 @@ class PostTile extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        'assets/posts/dislike_icon.png', // 🔹 like icon
+                        'assets/posts/dislike_icon.png',
+                        height: width * 0.04,
                       ),
                       const SizedBox(width: 5),
                       Text(
@@ -123,7 +125,8 @@ class PostTile extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        'assets/posts/view.png', // 🔹 like icon
+                        'assets/posts/view.png',
+                        height: width * 0.04,
                       ),
                       const SizedBox(width: 5),
                       Text(
