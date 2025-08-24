@@ -79,12 +79,20 @@ class _QuotesScreenState extends State<QuotesScreen> {
         ],
         backgroundColor: AppColors.q2grey,
       ),
-      body: ListView.builder(
-        itemCount: quotes.length,
-        itemBuilder: (context, index) {
-          final quote = quotes[index]; // <-- yahan ek PostsItem hai
-          return QuoteCard(quote: quote); // PostTile ko bhejna
-        },
+      body: Column(
+        children: [
+          Divider(color: AppColors.q1grey),
+
+          Expanded(
+            child: ListView.builder(
+              itemCount: quotes.length,
+              itemBuilder: (context, index) {
+                final quote = quotes[index]; // <-- yahan ek PostsItem hai
+                return QuoteCard(quote: quote); // PostTile ko bhejna
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

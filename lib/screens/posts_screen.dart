@@ -70,6 +70,7 @@ class _PostsScreenState extends State<PostsScreen> {
               ),
             ),
             actions: [
+              Image.asset("assets/posts/order.png", height: 18),
               IconButton(
                 icon: const Icon(Icons.search, color: AppColors.whiteColor),
                 onPressed: () {
@@ -84,31 +85,41 @@ class _PostsScreenState extends State<PostsScreen> {
             ],
             backgroundColor: AppColors.blackColor,
           ),
-          body: ListView.builder(
-            controller: _scrollController,
-            itemCount: posts.length + (provider.hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index < posts.length) {
-                final post = posts[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PostDetailScreen(post: post),
-                      ),
-                    );
+
+          body: Column(
+            children: [
+              Divider(color: AppColors.q1grey),
+
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: posts.length + (provider.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index < posts.length) {
+                      final post = posts[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PostDetailScreen(post: post),
+                            ),
+                          );
+                        },
+                        child: PostTile(post: post),
+                      );
+                    } else {
+                      // Loader at bottom jab aur data load ho raha ho
+                      return const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
                   },
-                  child: PostTile(post: post),
-                );
-              } else {
-                // Loader at bottom jab aur data load ho raha ho
-                return const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-            },
+                ),
+              ),
+            ],
           ),
         );
       },

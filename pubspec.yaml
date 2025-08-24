@@ -81,6 +81,11 @@ flutter:
     - assets/search/history_image.png
     - assets/search/magical.png
     - assets/search/myestry.png
+    #profile
+    - assets/profile/profile.png
+    #splash
+    - assets/splash/logo.png
+    - assets/splash/logo2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -2,6 +2,7 @@ import 'package:blog_app/providers/favourite_provider.dart';
 import 'package:blog_app/providers/posts_provider.dart';
 import 'package:blog_app/providers/quotes_provider.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
+import 'package:blog_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,9 +22,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => QuotesProvider()),
       ],
       child: MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            iconTheme: IconThemeData(
+              color: Colors.white, // 👈 sab screens ke liye back arrow color
+            ),
+          ),
+        ),
         title: 'Blog App',
         debugShowCheckedModeBanner: false,
-        home: NavigationBar1(),
+        home: SplashScreen(),
       ),
     );
   }
