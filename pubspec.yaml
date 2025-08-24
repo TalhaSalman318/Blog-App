@@ -75,6 +75,11 @@ flutter:
     - assets/quotes/like_button.png
     - assets/quotes/share_button.png
     - assets/quotes/search_button.png
+    - assets/quotes/yellow_coma.png
+    - assets/quotes/blue_coma.png
+    - assets/quotes/green_coma.png
+    - assets/quotes/pink_coma.png
+    - assets/quotes/purple_coma.png
     #search
     - assets/search/crime.png
     - assets/search/french_image.png

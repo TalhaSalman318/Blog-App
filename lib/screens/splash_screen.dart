@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 10000000), () async {
+    Future.delayed(const Duration(seconds: 3), () async {
       await Provider.of<PostsProvider>(context, listen: false);
 
       // Now go to HomeScreen
@@ -33,44 +33,34 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: AppColors.blackColor,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: 50),
+          SizedBox(height: 180),
 
-                Center(
-                  child: Image.asset("assets/splash/logo.png", height: 75),
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Daily Stories",
-                  style: TextStyle(
-                    color: AppColors.whiteColor,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
+          Center(child: Image.asset("assets/splash/logo.png", height: 75)),
+          SizedBox(height: 20),
+          Text(
+            "Daily Stories",
+            style: TextStyle(
+              color: AppColors.whiteColor,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10),
 
-                Text(
-                  "Your daily story at a glance",
-                  style: TextStyle(color: AppColors.greyColor1, fontSize: 16),
-                ),
-                SizedBox(height: 50),
-                Padding(
-                  padding: const EdgeInsets.only(top: 70),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 30.0),
-                    child: Image.asset(
-                      "assets/splash/logo2.png",
-                      height: 45,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
+          Text(
+            "Your daily story at a glance",
+            style: TextStyle(color: AppColors.greyColor1, fontSize: 16),
+          ),
+          SizedBox(height: 50),
+          Padding(
+            padding: const EdgeInsets.only(top: 160),
+            child: Image.asset(
+              "assets/splash/logo2.png",
+              height: 45,
+              fit: BoxFit.cover,
             ),
           ),
         ],

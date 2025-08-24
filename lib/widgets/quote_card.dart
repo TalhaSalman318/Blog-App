@@ -5,7 +5,15 @@ import 'package:flutter/material.dart';
 class QuoteCard extends StatelessWidget {
   final QuotesItem quote;
 
-  const QuoteCard({super.key, required this.quote});
+  final List<String> comaImage = [
+    "assets/quotes/blue_coma.png",
+    "assets/quotes/green_coma.png",
+    "assets/quotes/pink_coma.png",
+    "assets/quotes/yellow_coma.png",
+    "assets/quotes/purple_coma.png",
+  ];
+
+  QuoteCard({super.key, required this.quote});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +34,12 @@ class QuoteCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start, // 👈 alignment
           children: [
+            Image.asset(
+              comaImage[(quote.id ?? 1) %
+                  comaImage.length], // Select image based on id
+              height: 30,
+            ),
+            SizedBox(height: 15),
             Text(
               quote.quote ?? "",
               style: TextStyle(

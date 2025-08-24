@@ -44,13 +44,19 @@ class _QuotesScreenState extends State<QuotesScreen> {
       backgroundColor: AppColors.q2grey,
 
       appBar: AppBar(
-        title: const Text(
-          "Quotes",
-          style: TextStyle(
-            color: AppColors.whiteColor,
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          children: [
+            Image.asset("assets/quotes/blue_coma.png", height: 30),
+            SizedBox(width: 10),
+            Text(
+              "Quotes",
+              style: TextStyle(
+                color: AppColors.whiteColor,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
         actions: [
           Row(
