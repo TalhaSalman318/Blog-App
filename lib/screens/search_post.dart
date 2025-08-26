@@ -61,109 +61,106 @@ class _SearchPostState extends State<SearchPost> {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ListView.builder(
-                itemCount: widget.posts.length,
-                itemBuilder: (context, index) {
-                  final random_image = widget
-                      .myImages[index % widget.myImages.length]; // cycle karega
-                  final random_color =
-                      widget.myColors[index % widget.myColors.length];
-                  final post = widget.posts[index];
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: AppColors.greyColor2,
-                      ),
-                      height: 125,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 70,
-                              width: 70,
-                              decoration: BoxDecoration(
-                                color: random_color,
-                                borderRadius: BorderRadius.circular(10.0),
-                                image: DecorationImage(
-                                  image: AssetImage(random_image),
-                                  fit: BoxFit.cover,
-                                ),
+            child: ListView.builder(
+              itemCount: widget.posts.length,
+              itemBuilder: (context, index) {
+                final random_image = widget
+                    .myImages[index % widget.myImages.length]; // cycle karega
+                final random_color =
+                    widget.myColors[index % widget.myColors.length];
+                final post = widget.posts[index];
+                return Padding(
+                  padding: const EdgeInsets.all(9.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: AppColors.greyColor2,
+                    ),
+                    height: 125,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            height: 95,
+                            width: 95,
+                            decoration: BoxDecoration(
+                              color: random_color,
+                              borderRadius: BorderRadius.circular(10.0),
+                              image: DecorationImage(
+                                image: AssetImage(random_image),
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  post.title ?? " ",
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor,
-                                    fontSize: width * 0.04,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                post.title ?? " ",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: AppColors.whiteColor,
+                                  fontSize: width * 0.045,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                SizedBox(height: 15),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: 25,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: random_color,
-                                        borderRadius: BorderRadius.circular(
-                                          20.0,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          post.tags![0] ?? "",
-                                          style: TextStyle(
-                                            color: AppColors.whiteColor,
-                                          ),
+                              ),
+                              SizedBox(height: 15),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 25,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      color: random_color,
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        post.tags![0] ?? "",
+                                        style: TextStyle(
+                                          color: AppColors.whiteColor,
                                         ),
                                       ),
                                     ),
+                                  ),
 
-                                    Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Icon(
-                                            Icons.remove_red_eye,
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Icon(
+                                          Icons.remove_red_eye,
+                                          color: AppColors.greyColor1,
+                                        ),
+                                        Text(
+                                          post.views.toString() ?? "",
+                                          style: TextStyle(
                                             color: AppColors.greyColor1,
                                           ),
-                                          Text(
-                                            post.views.toString() ?? "",
-                                            style: TextStyle(
-                                              color: AppColors.greyColor1,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
           ),
         ],

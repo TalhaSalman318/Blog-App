@@ -1,6 +1,10 @@
 // lib/screens/splash_screen.dart
+import 'dart:async';
+
 import 'package:blog_app/providers/posts_provider.dart';
+import 'package:blog_app/screens/login_screen.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
+import 'package:blog_app/storage/session_storage.dart';
 import 'package:blog_app/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +21,38 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () async {
-      await Provider.of<PostsProvider>(context, listen: false);
+    // Future.delayed(const Duration(seconds: 3), () async {
+    //   await Provider.of<PostsProvider>(context, listen: false);
 
-      // Now go to HomeScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const NavigationBar1()),
-      );
+    //   // Now go to HomeScreen
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (_) => const NavigationBar1()),
+    //   );
+    // });
+
+    // For Fluture Secure Storage
+
+    final session = SessionController.instance;
+
+    session.loadSession().then((response) {
+      if (session.userId == null) {
+        Timer(const Duration(seconds: 2), () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+            (route) => false,
+          );
+        });
+      } else {
+        Timer(const Duration(seconds: 2), () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const NavigationBar1()),
+            (route) => false,
+          );
+        });
+      }
     });
   }
 

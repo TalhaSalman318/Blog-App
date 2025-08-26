@@ -5,7 +5,15 @@ import 'package:blog_app/widgets/quote_card.dart';
 import 'package:flutter/material.dart';
 
 class QuotesScreen extends StatefulWidget {
-  const QuotesScreen({super.key});
+  final List<String> comaImage = [
+    "assets/quotes/blue_coma.png",
+    "assets/quotes/green_coma.png",
+    "assets/quotes/pink_coma.png",
+    "assets/quotes/yellow_coma.png",
+    "assets/quotes/purple_coma.png",
+  ];
+
+  QuotesScreen({super.key});
 
   @override
   State<QuotesScreen> createState() => _QuotesScreenState();

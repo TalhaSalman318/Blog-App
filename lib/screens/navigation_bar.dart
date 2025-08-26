@@ -64,7 +64,7 @@ class _TabBar1State extends State<NavigationBar1> {
       body: cindex == 0
           ? const PostsScreen()
           : cindex == 1
-          ? const QuotesScreen()
+          ? QuotesScreen()
           : const ProfileScreen(),
     );
   }

@@ -1,26 +1,55 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class SessionStorage {
-  static const _storage = FlutterSecureStorage();
-  static const _keyToken = 'token';
-  static const _keyUserId = 'userId';
+class SessionController {
+  // constructor
+  SessionController._internal();
 
-  // Save token & user ID after login
-  static Future<void> saveSession(String token, String userId) async {
-    await _storage.write(key: _keyToken, value: token);
-    await _storage.write(key: _keyUserId, value: userId);
+  // made instance of class
+  static final SessionController _instance = SessionController._internal();
+  static SessionController get instance => _instance;
+
+  String? userId;
+  String? token;
+  DateTime? expiryDate;
+
+  void setSession(String userId, String token, DateTime expiryDate) async {
+    this.userId = userId;
+    this.token = token;
+    this.expiryDate = expiryDate;
+
+    // initialize the pacakage
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+
+    await storage.write(key: 'userId', value: userId);
+    await storage.write(key: 'token', value: token);
+    await storage.write(key: 'expiryDate', value: expiryDate.toIso8601String());
   }
 
-  // Retrieve token & user ID
-  static Future<Map<String, String?>> getSession() async {
-    final token = await _storage.read(key: _keyToken);
-    final userId = await _storage.read(key: _keyUserId);
-    return {'token': token, 'userId': userId};
+  Future<void> loadSession() async {
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    final response = await Future.wait([
+      storage.read(key: 'userId'),
+      storage.read(key: 'token'),
+      storage.read(key: 'expiryDate'),
+    ]);
+    userId = response[0];
+    token = response[1];
+    String? expiryDateString = response[2];
+    if (expiryDateString != null) {
+      expiryDate = DateTime.parse(expiryDateString);
+    }
   }
 
-  // Clear storage on logout
-  static Future<void> clearSession() async {
-    await _storage.delete(key: _keyToken);
-    await _storage.delete(key: _keyUserId);
+  void clearSession() async {
+    userId = null;
+    token = null;
+    expiryDate = null;
+
+    const FlutterSecureStorage storage = FlutterSecureStorage();
+    await Future.wait([
+      storage.delete(key: 'userId'),
+      storage.delete(key: 'token'),
+      storage.delete(key: 'expiryDate'),
+    ]);
   }
 }
