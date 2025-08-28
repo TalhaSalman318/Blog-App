@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final session = SessionController.instance;
 
     session.loadSession().then((response) {
-      if (session.userId == null) {
+      if (session.currentUser == null) {
         Timer(const Duration(seconds: 2), () {
           Navigator.pushAndRemoveUntil(
             context,
