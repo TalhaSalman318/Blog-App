@@ -1,6 +1,9 @@
+import 'package:blog_app/providers/auth_provider.dart';
 import 'package:blog_app/providers/favourite_provider.dart';
+import 'package:blog_app/providers/login_provider.dart';
 import 'package:blog_app/providers/posts_provider.dart';
 import 'package:blog_app/providers/quotes_provider.dart';
+import 'package:blog_app/screens/login_screen.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
 import 'package:blog_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PostsProvider()),
-        ChangeNotifierProvider(create: (_) => FavouriteProvider()),
-        ChangeNotifierProvider(create: (_) => QuotesProvider()),
+        ChangeNotifierProvider(create: (context) => PostsProvider()),
+        ChangeNotifierProvider(create: (context) => QuotesProvider()),
+        // ChangeNotifierProvider(create: (context) => UserProvider()),
+        // ChangeNotifierProvider(create: (context) => NavigationbarProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => LoginProvider()),
+        // ChangeNotifierProvider(create: (context) => UserPostsProvider()),
       ],
       child: MaterialApp(
         theme: ThemeData(
@@ -29,9 +36,16 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        title: 'Blog App',
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
+        home: Consumer<AuthProvider>(
+          builder: (context, authProvider, _) {
+            // // If token exists and user is loaded, go to HomeScreen
+            if (authProvider.user != null) {
+              return const MyApp();
+            }
+            return const NavigationBar1();
+          },
+        ),
       ),
     );
   }

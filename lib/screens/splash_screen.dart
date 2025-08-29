@@ -21,38 +21,24 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // Future.delayed(const Duration(seconds: 3), () async {
-    //   await Provider.of<PostsProvider>(context, listen: false);
+    final session = SessionController();
 
-    //   // Now go to HomeScreen
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (_) => const NavigationBar1()),
-    //   );
-    // });
-
-    // For Fluture Secure Storage
-
-    final session = SessionController.instance;
-
-    session.loadSession().then((response) {
-      if (session.currentUser == null) {
-        Timer(const Duration(seconds: 2), () {
+    session.getToken().then((response) {
+      Future.delayed(const Duration(seconds: 2), () {
+        if (response == null) {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const LoginScreen()),
             (route) => false,
           );
-        });
-      } else {
-        Timer(const Duration(seconds: 2), () {
+        } else {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const NavigationBar1()),
             (route) => false,
           );
-        });
-      }
+        }
+      });
     });
   }
 

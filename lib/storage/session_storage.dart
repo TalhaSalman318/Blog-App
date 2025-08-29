@@ -1,65 +1,21 @@
-// session_controller.dart
-import 'dart:convert';
-import 'package:blog_app/models/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SessionController {
-  SessionController._internal();
-  static final SessionController _instance = SessionController._internal();
-  static SessionController get instance => _instance;
+  final _storage = const FlutterSecureStorage();
+  final _tokenKey = "auth_token";
 
-  UsersItem? currentUser;
-  String? token;
-  DateTime? expiryDate;
-
-  bool get isSessionActive {
-    if (token == null || expiryDate == null) return false;
-    return DateTime.now().isBefore(expiryDate!);
+  Future<void> saveToken(String token) async {
+    await _storage.write(key: _tokenKey, value: token);
   }
 
-  Future<void> setSession(UsersItem user) async {
-    currentUser = user;
-    token = user.token; // 🔥 token user se lo
-    expiryDate = DateTime.now().add(
-      Duration(days: 7),
-    ); // 🔥 ya API ka date use karo
-
-    const storage = FlutterSecureStorage();
-    await storage.write(key: 'user', value: jsonEncode(user.toJson()));
-    await storage.write(key: 'token', value: token);
-    await storage.write(
-      key: 'expiryDate',
-      value: expiryDate!.toIso8601String(),
-    );
+  Future<String?> getToken() async {
+    return await _storage.read(key: _tokenKey);
   }
 
-  Future<void> loadSession() async {
-    const storage = FlutterSecureStorage();
-    final data = await Future.wait([
-      storage.read(key: 'user'),
-      storage.read(key: 'token'),
-      storage.read(key: 'expiryDate'),
-    ]);
-
-    if (data[0] != null) {
-      currentUser = UsersItem.fromJson(jsonDecode(data[0]!));
-    }
-    token = data[1];
-    if (data[2] != null) {
-      expiryDate = DateTime.parse(data[2]!);
-    }
-  }
-
-  Future<void> clearSession() async {
-    currentUser = null;
-    token = null;
-    expiryDate = null;
-
-    const storage = FlutterSecureStorage();
-    await storage.deleteAll();
+  Future<void> deleteToken() async {
+    await _storage.delete(key: _tokenKey);
   }
 }
-
 
 
 // Tech Brother Code 

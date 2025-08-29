@@ -1,8 +1,7 @@
-import 'dart:async';
-
+import 'package:blog_app/main.dart';
 import 'package:blog_app/providers/auth_provider.dart';
+import 'package:blog_app/providers/login_provider.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
-import 'package:blog_app/storage/session_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,50 +13,173 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+
+    Future<void> _login() async {
+      if (_formKey.currentState!.validate()) {
+        await authProvider.login(
+          usernameController.text,
+          passwordController.text,
+        );
+
+        if (authProvider.user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const MyApp()),
+          );
+        } else if (authProvider.error != null) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(authProvider.error!)));
+        }
+      }
+    }
+
     return Scaffold(
-      appBar: AppBar(title: Text("Login Screen")),
-      body: Column(
-        children: [
-          TextFormField(
-            controller: usernameController,
-            decoration: InputDecoration(hintText: "Username"),
-          ),
-          TextFormField(
-            controller: passwordController,
-            decoration: InputDecoration(hintText: "password"),
-          ),
-          authProvider.isLoading
-              ? const CircularProgressIndicator()
-              : ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await authProvider.login(
-                        usernameController.text,
-                        passwordController.text,
+      appBar: AppBar(),
+      // backgroundColor: backColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Title
+                  Text(
+                    "Welcome Back",
+                    style: TextStyle(
+                      // color: whiteColor,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "inter",
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Login to continue",
+                    style: TextStyle(
+                      // color: greyColor,
+                      fontSize: 16,
+                      fontFamily: "inter",
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  /// Email Field
+                  TextFormField(
+                    controller: usernameController,
+                    // style: const TextStyle(color: whiteColor),
+                    decoration: InputDecoration(
+                      filled: true,
+                      // fillColor: cardColor,
+                      hintText: "Username",
+                      // hintStyle: TextStyle(color: greyColor),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    validator: (value) =>
+                        value!.isEmpty ? "Enter your username" : null,
+                  ),
+                  const SizedBox(height: 20),
+
+                  /// Password Field
+                  Consumer<LoginProvider>(
+                    builder: (context, loginProvider, child) {
+                      return TextFormField(
+                        controller: passwordController,
+                        // obscureText: loginProvider.obscurePassword,
+                        // style: const TextStyle(color: whiteColor),
+                        decoration: InputDecoration(
+                          filled: true,
+                          // fillColor: cardColor,
+                          hintText: "Password",
+                          // hintStyle: TextStyle(color: greyColor),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              loginProvider.obscurePassword
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              // color: greyColor,
+                            ),
+                            onPressed: loginProvider.toggleVisibility,
+                          ),
+                        ),
+                        validator: (value) =>
+                            value!.isEmpty ? "Enter your password" : null,
                       );
-                      if (authProvider.isLoggedIn) {
-                        Navigator.pushReplacement(
+                    },
+                  ),
+                  const SizedBox(height: 30),
+
+                  /// Login Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        // backgroundColor: whiteColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const NavigationBar1(),
+                            builder: (context) => const NavigationBar1(),
                           ),
                         );
-                      }
-                    } catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text("Error: $e")));
-                    }
-                  },
-                  child: const Text("Login"),
-                ),
-        ],
+                      },
+                      child: authProvider.isLoading
+                          ? const CircularProgressIndicator()
+                          : Text(
+                              "Login",
+                              style: TextStyle(
+                                // color: backColor,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "inter",
+                              ),
+                            ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// Sign Up Text
+                  Center(
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Don’t have an account? Sign Up",
+                        style: TextStyle(
+                          // color: greyColor,
+                          fontSize: 14,
+                          fontFamily: "Inter",
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
