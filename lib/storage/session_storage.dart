@@ -1,11 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class SessionController {
+class SessionStorage {
   final _storage = const FlutterSecureStorage();
   final _tokenKey = "auth_token";
 
-  Future<void> saveToken(String token) async {
-    await _storage.write(key: _tokenKey, value: token);
+  Future<void> saveToken(String tokeN) async {
+    await _storage.write(key: _tokenKey, value: tokeN);
   }
 
   Future<String?> getToken() async {
@@ -17,8 +17,7 @@ class SessionController {
   }
 }
 
-
-// Tech Brother Code 
+// Tech Brother Code
 
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

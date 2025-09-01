@@ -94,20 +94,9 @@ class PostsProvider extends ChangeNotifier {
   }
 
   // 🔹 Delete post (optimistic)
-  Future<void> deletePost(int id) async {
-    final idx = _posts.indexWhere((p) => p.id == id);
-    if (idx == -1) return;
-
-    final removed = _posts.removeAt(idx);
-    notifyListeners();
-
-    try {
-      await _postsService.deletePost(id);
-    } catch (e) {
-      _posts.insert(idx, removed); // rollback
-      _error = e.toString();
-      notifyListeners();
-    }
+  void deletePost(int postId) {
+    _posts.removeWhere((post) => post.id == postId);
+    notifyListeners(); // 👈 UI refresh trigger
   }
 
   // 🔹 Helpers

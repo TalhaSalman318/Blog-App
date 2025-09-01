@@ -121,9 +121,10 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
             child: InkWell(
               onTap: () {
                 context.read<PostsProvider>().deletePost(widget.post.id!);
-                Navigator.pop(context); // ✅ delete ke baad back ho jao
+                Navigator.pop(context);
                 print("deleted");
               },
+
               child: Container(
                 height: height * 0.07,
                 width: width,

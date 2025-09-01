@@ -21,21 +21,21 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    final session = SessionController();
+    final session = SessionStorage();
 
     session.getToken().then((response) {
       Future.delayed(const Duration(seconds: 2), () {
-        if (response == null) {
-          Navigator.pushAndRemoveUntil(
+        if (!mounted) return; // ✅ prevent navigation after dispose
+
+        if (response == null || response.isEmpty) {
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const LoginScreen()),
-            (route) => false,
           );
         } else {
-          Navigator.pushAndRemoveUntil(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const NavigationBar1()),
-            (route) => false,
           );
         }
       });

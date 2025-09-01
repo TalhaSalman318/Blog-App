@@ -2,6 +2,8 @@ import 'package:blog_app/main.dart';
 import 'package:blog_app/providers/auth_provider.dart';
 import 'package:blog_app/providers/login_provider.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
+import 'package:blog_app/storage/session_storage.dart';
+import 'package:blog_app/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,29 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
 
-    Future<void> _login() async {
-      if (_formKey.currentState!.validate()) {
-        await authProvider.login(
-          usernameController.text,
-          passwordController.text,
-        );
-
-        if (authProvider.user != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const MyApp()),
-          );
-        } else if (authProvider.error != null) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(authProvider.error!)));
-        }
-      }
-    }
-
     return Scaffold(
-      appBar: AppBar(),
-      // backgroundColor: backColor,
+      appBar: AppBar(backgroundColor: AppColors.blackColor),
+      backgroundColor: AppColors.blackColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -55,9 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   /// Title
                   Text(
-                    "Welcome Back",
+                    "Login",
                     style: TextStyle(
-                      // color: whiteColor,
+                      color: AppColors.whiteColor,
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       fontFamily: "inter",
@@ -65,9 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Login to continue",
+                    "Enter Email and Password to continue...",
                     style: TextStyle(
-                      // color: greyColor,
+                      color: AppColors.greyColor1,
                       fontSize: 16,
                       fontFamily: "inter",
                     ),
@@ -77,12 +59,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   /// Email Field
                   TextFormField(
                     controller: usernameController,
-                    // style: const TextStyle(color: whiteColor),
+                    style: const TextStyle(color: AppColors.whiteColor),
                     decoration: InputDecoration(
                       filled: true,
-                      // fillColor: cardColor,
+                      fillColor: AppColors.greyColor5,
                       hintText: "Username",
-                      // hintStyle: TextStyle(color: greyColor),
+                      hintStyle: TextStyle(color: AppColors.greyColor1),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -98,13 +80,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     builder: (context, loginProvider, child) {
                       return TextFormField(
                         controller: passwordController,
-                        // obscureText: loginProvider.obscurePassword,
-                        // style: const TextStyle(color: whiteColor),
+                        obscureText: loginProvider.obscurePassword,
+                        style: const TextStyle(color: AppColors.whiteColor),
                         decoration: InputDecoration(
                           filled: true,
-                          // fillColor: cardColor,
+                          fillColor: AppColors.greyColor5,
                           hintText: "Password",
-                          // hintStyle: TextStyle(color: greyColor),
+                          hintStyle: TextStyle(color: AppColors.greyColor1),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -114,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               loginProvider.obscurePassword
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              // color: greyColor,
+                              color: AppColors.greyColor1,
                             ),
                             onPressed: loginProvider.toggleVisibility,
                           ),
@@ -132,25 +114,47 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        // backgroundColor: whiteColor,
+                        backgroundColor: AppColors.redColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NavigationBar1(),
-                          ),
-                        );
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          await authProvider.login(
+                            usernameController.text,
+                            passwordController.text,
+                          );
+
+                          if (authProvider.user != null) {
+                            final session = SessionStorage();
+
+                            // ✅ Yahan token save karo
+                            await session.saveToken(authProvider.user!.token);
+
+                            // ✅ Navigate to NavigationBar1
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NavigationBar1(),
+                              ),
+                            );
+                          } else if (authProvider.error != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(authProvider.error!)),
+                            );
+                          }
+                        }
                       },
+
                       child: authProvider.isLoading
-                          ? const CircularProgressIndicator()
-                          : Text(
+                          ? const CircularProgressIndicator(
+                              color: AppColors.whiteColor,
+                            )
+                          : const Text(
                               "Login",
                               style: TextStyle(
-                                // color: backColor,
+                                color: AppColors.whiteColor,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "inter",
@@ -159,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   /// Sign Up Text
                   Center(
@@ -168,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text(
                         "Don’t have an account? Sign Up",
                         style: TextStyle(
-                          // color: greyColor,
+                          color: AppColors.greyColor3,
                           fontSize: 14,
                           fontFamily: "Inter",
                         ),

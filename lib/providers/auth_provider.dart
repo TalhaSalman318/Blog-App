@@ -1,46 +1,73 @@
+import 'package:blog_app/models/user.dart';
+import 'package:blog_app/services/auth_service.dart';
+import 'package:blog_app/storage/session_storage.dart';
 import 'package:flutter/material.dart';
-import '../models/user.dart';
-import '../services/auth_service.dart';
-import '../storage/session_storage.dart';
 
-class AuthProvider with ChangeNotifier {
+class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
-  final SessionController _sessionStorage = SessionController();
 
-  UsersItem? _user;
+  Users? _user;
+  Users? get user => _user;
+
+  bool _startupLoading = true; // ✅ Only for app init
+  bool get startupLoading => _startupLoading;
+
+  bool _authLoading = false; // ✅ Only for login/logout
+  bool get authLoading => _authLoading;
+
   bool _isLoading = false;
-
-  UsersItem? get user => _user;
   bool get isLoading => _isLoading;
-  bool get isLoggedIn => _user != null;
 
-  get error => null;
+  String? _error;
+  String? get error => _error;
+
+  String? _token;
+  String? get token => _token;
+
+  AuthProvider() {
+    loadUserFromStorage(); // check token on start
+  }
 
   Future<void> loadUserFromStorage() async {
-    await _sessionStorage.getToken();
+    _startupLoading = true;
+    notifyListeners();
+    _token = await SessionStorage().getToken();
+    if (_token != null) {
+      _user = await _authService.getProfile();
+    }
+    _startupLoading = false;
     notifyListeners();
   }
 
   Future<void> login(String username, String password) async {
-    _isLoading = true;
+    _authLoading = true;
+    _error = null;
     notifyListeners();
 
     try {
-      final loggedInUser = await _authService.login(username, password);
-      _user = loggedInUser;
-      await _sessionStorage.saveToken(loggedInUser!.token ?? '');
-      notifyListeners();
+      final user = await _authService.login(username, password);
+      if (user != null) {
+        _user = user;
+        _token = await SessionStorage().getToken();
+
+        // ✅ save token in storage
+        await SessionStorage().saveToken(_token!);
+      } else {
+        _error = "Invalid username or password";
+      }
     } catch (e) {
-      rethrow;
-    } finally {
-      _isLoading = false;
-      notifyListeners();
+      _error = e.toString();
     }
+
+    _authLoading = false;
+    notifyListeners();
   }
 
   Future<void> logout() async {
+    await _authService.logout();
+    await SessionStorage().deleteToken(); // ✅ remove token from storage
     _user = null;
-    await _sessionStorage.deleteToken();
+    _token = null;
     notifyListeners();
   }
 }

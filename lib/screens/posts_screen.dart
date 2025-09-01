@@ -48,14 +48,30 @@ class _PostsScreenState extends State<PostsScreen> {
   Widget build(BuildContext context) {
     return Consumer<PostsProvider>(
       builder: (context, provider, child) {
+        // LOADING (pehli dafa load ho raha ho)
         if (provider.isLoading && provider.posts.isEmpty) {
-          return const Center(child: CircularProgressIndicator());
+          return Scaffold(
+            backgroundColor: AppColors.blackColor,
+            body: const Center(
+              child: CircularProgressIndicator(color: AppColors.whiteColor),
+            ),
+          );
         }
 
+        // ERROR (aur koi data bhi nahi mila)
         if (provider.error != null && provider.posts.isEmpty) {
-          return Center(child: Text("Error: ${provider.error}"));
+          return Scaffold(
+            backgroundColor: AppColors.blackColor,
+            body: Center(
+              child: Text(
+                "Error: ${provider.error}",
+                style: const TextStyle(color: AppColors.whiteColor),
+              ),
+            ),
+          );
         }
 
+        // SUCCESS
         final posts = provider.posts;
 
         return Scaffold(
@@ -85,11 +101,9 @@ class _PostsScreenState extends State<PostsScreen> {
             ],
             backgroundColor: AppColors.blackColor,
           ),
-
           body: Column(
             children: [
               Divider(color: AppColors.q1grey),
-
               Expanded(
                 child: ListView.builder(
                   controller: _scrollController,
@@ -113,7 +127,11 @@ class _PostsScreenState extends State<PostsScreen> {
                       // Loader at bottom jab aur data load ho raha ho
                       return const Padding(
                         padding: EdgeInsets.all(16),
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.whiteColor,
+                          ),
+                        ),
                       );
                     }
                   },

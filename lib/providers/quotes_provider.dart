@@ -1,14 +1,13 @@
-import 'package:blog_app/models/quote.dart';
-import 'package:blog_app/services/quotes_service.dart';
+import 'package:blog_app/models/post.dart';
 import 'package:flutter/foundation.dart';
-import '../models/post.dart';
-import '../services/posts_service.dart';
+import '../models/quote.dart';
+import '../services/quotes_service.dart';
 
 class QuotesProvider extends ChangeNotifier {
-  final QuotesService _postsService = QuotesService();
+  final QuotesService _quotesService = QuotesService();
 
   final List<QuotesItem> _quotes = [];
-  List<int> _selectedItems = [];
+  List<QuotesItem> get quotes => List.unmodifiable(_quotes);
 
   bool _isLoading = false;
   String? _error;
@@ -21,62 +20,83 @@ class QuotesProvider extends ChangeNotifier {
   int get total => _total;
   bool get hasMore => _quotes.length < _total;
 
-  // 🔹 Fetch posts with pagination
-  Future<void> fetchquotes({bool refresh = false}) async {
+  // 🔹 Fetch quotes with pagination
+  Future<void> fetchQuotes({bool refresh = false}) async {
     if (_isLoading) return;
+
+    if (refresh) {
+      _skip = 0;
+      _quotes.clear();
+      _total = 0;
+    }
+
     _setLoading(true);
+    try {
+      final response = await _quotesService.getQuotes(
+        limit: _limit,
+        skip: _skip,
+      );
+
+      _quotes.addAll(response.quotes as Iterable<QuotesItem>);
+      _total = response.total!;
+      _skip += _limit;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _setLoading(false);
+    }
   }
 
-  // 🔹 Add new post (optimistic)
-  Future<void> addquotes(PostsItem newPost) async {
-    final temp = newPost.copyWith(
+  // 🔹 Add new quote (optimistic update)
+  Future<void> addQuote(QuotesItem newQuote) async {
+    final temp = newQuote.copyWith(
       id: DateTime.now().millisecondsSinceEpoch * -1,
-    ); // temp ID
-    _quotes.insert(0, temp as QuotesItem);
+    ); // temporary negative ID
+    _quotes.insert(0, temp);
     notifyListeners();
 
     try {
-      final created = await _postsService.addQuote(newPost as PostModel);
-      final idx = _quotes.indexWhere((p) => p.id == temp.id);
+      final created = await _quotesService.addQuote(newQuote as PostModel);
+      final idx = _quotes.indexWhere((q) => q.id == temp.id);
       if (idx != -1) _quotes[idx] = created as QuotesItem;
     } catch (e) {
-      _quotes.removeWhere((p) => p.id == temp.id);
+      _quotes.removeWhere((q) => q.id == temp.id);
       _error = e.toString();
     } finally {
       notifyListeners();
     }
   }
 
-  // 🔹 Update post (optimistic)
-  Future<void> updatePost(int id, PostsItem updated) async {
-    final idx = _quotes.indexWhere((p) => p.id == id);
+  // 🔹 Update quote (optimistic update)
+  Future<void> updateQuote(int id, QuotesItem updated) async {
+    final idx = _quotes.indexWhere((q) => q.id == id);
     if (idx == -1) return;
 
     final old = _quotes[idx];
-    _quotes[idx] = updated as QuotesItem;
+    _quotes[idx] = updated;
     notifyListeners();
 
     try {
-      final res = await _postsService.updateQuote(id, updated as PostModel);
+      final res = await _quotesService.updateQuote(id, updated as PostModel);
       _quotes[idx] = res as QuotesItem;
     } catch (e) {
-      _quotes[idx] = old;
+      _quotes[idx] = old; // rollback
       _error = e.toString();
     } finally {
       notifyListeners();
     }
   }
 
-  // 🔹 Delete post (optimistic)
+  // 🔹 Delete quote (optimistic update)
   Future<void> deleteQuote(int id) async {
-    final idx = _quotes.indexWhere((p) => p.id == id);
+    final idx = _quotes.indexWhere((q) => q.id == id);
     if (idx == -1) return;
 
     final removed = _quotes.removeAt(idx);
     notifyListeners();
 
     try {
-      await _postsService.deleteQuote(id);
+      await _quotesService.deleteQuote(id);
     } catch (e) {
       _quotes.insert(idx, removed); // rollback
       _error = e.toString();

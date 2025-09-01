@@ -1,9 +1,7 @@
 import 'package:blog_app/providers/auth_provider.dart';
-import 'package:blog_app/providers/favourite_provider.dart';
 import 'package:blog_app/providers/login_provider.dart';
 import 'package:blog_app/providers/posts_provider.dart';
 import 'package:blog_app/providers/quotes_provider.dart';
-import 'package:blog_app/screens/login_screen.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
 import 'package:blog_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +41,7 @@ class MyApp extends StatelessWidget {
             if (authProvider.user != null) {
               return const MyApp();
             }
-            return const NavigationBar1();
+            return const SplashScreen();
           },
         ),
       ),

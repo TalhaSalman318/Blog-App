@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:blog_app/models/post.dart';
+import 'package:blog_app/providers/posts_provider.dart';
 import 'package:blog_app/widgets/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as widget;
+import 'package:provider/provider.dart';
 
 class PostTile extends StatelessWidget {
   final PostsItem post; // ek post item
@@ -36,7 +41,10 @@ class PostTile extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.read<PostsProvider>().deletePost(post.id!);
+                      print("deleted");
+                    },
                     icon: Icon(Icons.delete, color: AppColors.whiteColor),
                   ),
                 ],
@@ -147,3 +155,14 @@ class PostTile extends StatelessWidget {
     );
   }
 }
+
+// extension
+//     on
+//         Future<widget.Response> Function(
+//           Uri url, {
+//           Object? body,
+//           Encoding? encoding,
+//           Map<String, String>? headers,
+//         }) {
+//   get id => null;
+// }
