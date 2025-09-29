@@ -1,4 +1,3 @@
-import 'package:blog_app/main.dart';
 import 'package:blog_app/providers/auth_provider.dart';
 import 'package:blog_app/providers/login_provider.dart';
 import 'package:blog_app/screens/navigation_bar.dart';
