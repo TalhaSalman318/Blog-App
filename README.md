@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+## 📸 Screenshots
+
+<a href="screenshots/app.jpg"><img src="screenshots/app.jpg" width="250"/></a>
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
